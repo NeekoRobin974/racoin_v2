@@ -14,9 +14,11 @@ use App\Model\Annonce;
 use App\Model\Categorie;
 use App\Model\Annonceur;
 use App\Model\Departement;
-use Slim\App;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Slim\Factory\AppFactory;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+
+
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -24,29 +26,42 @@ use Twig\Loader\FilesystemLoader;
 connection::createConn();
 
 // Initialisation de Slim
-$app = new App([
-    'settings' => [
-        'displayErrorDetails' => true,
-    ],
-]);
+$app = AppFactory::create();
+$app->addBodyParsingMiddleware();
+$app->addRoutingMiddleware();
+$errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
 // Initialisation de Twig
 $loader = new FilesystemLoader(__DIR__ . '/template');
 $twig   = new Environment($loader);
 
+// Output buffering middleware
+$app->add(function ($request, $handler) {
+    ob_start();
+    $response = $handler->handle($request);
+    $output = ob_get_clean();
+    if ($output) {
+        $response->getBody()->write($output);
+    }
+    return $response;
+});
+
 // Ajout d'un middleware pour le trailing slash
-$app->add(function (Request $request, Response $response, $next) {
-    $uri  = $request->getUri();
+$app->add(function (Request $request, $handler) {
+    $uri = $request->getUri();
     $path = $uri->getPath();
+    
     if ($path != '/' && str_ends_with($path, '/')) {
         $uri = $uri->withPath(substr($path, 0, -1));
         if ($request->getMethod() == 'GET') {
-            return $response->withRedirect((string)$uri, 301);
+            $response = new \Slim\Psr7\Response();
+            return $response->withHeader('Location', (string)$uri)->withStatus(301);
         } else {
-            return $next($request->withUri($uri), $response);
+            $request = $request->withUri($uri);
         }
     }
-    return $next($request, $response);
+    
+    return $handler->handle($request);
 });
 
 
@@ -188,7 +203,7 @@ $app->group('/api', function () use ($app, $twig, $menu, $chemin, $cat) {
                 $return->links         = $links;
                 echo $return->toJson();
             } else {
-                $app->notFound();
+                throw new \Slim\Exception\HttpNotFoundException($request);
             }
         });
     });
