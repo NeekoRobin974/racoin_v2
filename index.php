@@ -17,13 +17,16 @@ use App\Model\Departement;
 use Slim\Factory\AppFactory;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-
-
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 
 connection::createConn();
+
+$logger = new Logger('http_logger');
+$logger->pushHandler(new StreamHandler(__DIR__ . '/logs/app.log', Logger::INFO));
 
 // Initialisation de Slim
 $app = AppFactory::create();
@@ -31,11 +34,24 @@ $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
-// Initialisation de Twig
 $loader = new FilesystemLoader(__DIR__ . '/template');
 $twig   = new Environment($loader);
 
-// Output buffering middleware
+$app->add(function (Request $request, $handler) use ($logger) {
+    $method = $request->getMethod();
+    $path = $request->getUri()->getPath();
+    $ip = $request->getServerParams()['REMOTE_ADDR'] ?? 'unknown';
+    
+    $logger->info("Reçu: $method $path depuis $ip");
+    
+    $response = $handler->handle($request);
+    
+    $status = $response->getStatusCode();
+    $logger->info("Réponse: $status pour $method $path");
+    
+    return $response;
+});
+
 $app->add(function ($request, $handler) {
     ob_start();
     $response = $handler->handle($request);
@@ -46,7 +62,6 @@ $app->add(function ($request, $handler) {
     return $response;
 });
 
-// Ajout d'un middleware pour le trailing slash
 $app->add(function (Request $request, $handler) {
     $uri = $request->getUri();
     $path = $uri->getPath();

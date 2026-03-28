@@ -6,7 +6,8 @@
         "twig/twig": "3.*",
         "illuminate/database": "11.*",
         "ext-mysqli": "*",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "monolog/monolog": "^3.10"
     },
     "autoload": {
         "psr-4": {
