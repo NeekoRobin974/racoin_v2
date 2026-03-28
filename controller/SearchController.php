@@ -7,25 +7,15 @@ use App\Model\Categorie;
 
 class SearchController {
 
-    function show($twig, $menu, $chemin, $cat) {
+    function show($twig, $menu, string $chemin, $cat): void {
         $template = $twig->load("search.html.twig");
-        $menu = array(
-            array('href' => $chemin,
-                'text' => 'Acceuil'),
-            array('href' => $chemin."/search",
-                'text' => "Recherche")
-        );
-        echo $template->render(array("breadcrumb" => $menu, "chemin" => $chemin, "categories" => $cat));
+        $menu = [['href' => $chemin, 'text' => 'Acceuil'], ['href' => $chemin."/search", 'text' => "Recherche"]];
+        echo $template->render(["breadcrumb" => $menu, "chemin" => $chemin, "categories" => $cat]);
     }
 
-    function research($array, $twig, $menu, $chemin, $cat) {
+    function research(array $array, $twig, $menu, string $chemin, $cat): void {
         $template = $twig->load("index.html.twig");
-        $menu = array(
-            array('href' => $chemin,
-                'text' => 'Acceuil'),
-            array('href' => $chemin."/search",
-                'text' => "Résultats de la recherche")
-        );
+        $menu = [['href' => $chemin, 'text' => 'Acceuil'], ['href' => $chemin."/search", 'text' => "Résultats de la recherche"]];
 
         $nospace_mc = str_replace(' ', '', $array['motclef']);
         $nospace_cp = str_replace(' ', '', $array['codepostal']);
@@ -57,7 +47,7 @@ class SearchController {
 
             if ( $array['prix-min'] !== "Min" && $array['prix-max'] !== "Max") {
                 if($array['prix-max'] !== "nolimit") {
-                    $query->whereBetween('prix', array($array['prix-min'], $array['prix-max']));
+                    $query->whereBetween('prix', [$array['prix-min'], $array['prix-max']]);
                 } else {
                     $query->where('prix', '>=', $array['prix-min']);
                 }
@@ -70,7 +60,7 @@ class SearchController {
             $annonce = $query->get();
         }
 
-        echo $template->render(array("breadcrumb" => $menu, "chemin" => $chemin, "annonces" => $annonce, "categories" => $cat));
+        echo $template->render(["breadcrumb" => $menu, "chemin" => $chemin, "annonces" => $annonce, "categories" => $cat]);
 
     }
 

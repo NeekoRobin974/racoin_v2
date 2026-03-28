@@ -8,28 +8,18 @@ use App\Model\Annonceur;
 
 class HomeController
 {
-    protected $annonce = array();
+    protected $annonce = [];
 
-    public function displayAllAnnonce($twig, $menu, $chemin, $cat)
+    public function displayAllAnnonce($twig, $menu, $chemin, $cat): void
     {
         $template = $twig->load("index.html.twig");
-        $menu     = array(
-            array(
-                'href' => $chemin,
-                'text' => 'Acceuil'
-            ),
-        );
+        $menu     = [['href' => $chemin, 'text' => 'Acceuil']];
 
         $this->getAll($chemin);
-        echo $template->render(array(
-            "breadcrumb" => $menu,
-            "chemin"     => $chemin,
-            "categories" => $cat,
-            "annonces"   => $this->annonce
-        ));
+        echo $template->render(["breadcrumb" => $menu, "chemin"     => $chemin, "categories" => $cat, "annonces"   => $this->annonce]);
     }
 
-    public function getAll($chemin)
+    public function getAll($chemin): void
     {
         $tmp     = Annonce::with("Annonceur")->orderBy('id_annonce', 'desc')->take(12)->get();
         $annonce = [];
@@ -45,7 +35,7 @@ class HomeController
             $t->nom_annonceur = Annonceur::select("nom_annonceur")
                 ->where("id_annonceur", "=", $t->id_annonceur)
                 ->first()->nom_annonceur;
-            array_push($annonce, $t);
+            $annonce[] = $t;
         }
         $this->annonce = $annonce;
     }

@@ -12,11 +12,10 @@ use App\Model\Annonceur;
 use App\Model\Photo;
 
 class AnnonceurController {
-    public function __construct(){
-    }
-    function afficherAnnonceur($twig, $menu, $chemin, $n, $cat) {
+    public $annonceur;
+    function afficherAnnonceur($twig, $menu, string $chemin, $n, $cat): void {
         $this->annonceur = annonceur::find($n);
-        if(!isset($this->annonceur)){
+        if(!property_exists($this, 'annonceur') || $this->annonceur === null){
             echo "404";
             return;
         }
@@ -36,9 +35,6 @@ class AnnonceurController {
             $annonces[] = $a;
         }
         $template = $twig->load("annonceur.html.twig");
-        echo $template->render(array('nom' => $this->annonceur,
-            "chemin" => $chemin,
-            "annonces" => $annonces,
-            "categories" => $cat));
+        echo $template->render(['nom' => $this->annonceur, "chemin" => $chemin, "annonces" => $annonces, "categories" => $cat]);
     }
 }

@@ -6,38 +6,23 @@ use App\Model\ApiKey;
 
 class ApiKeyController {
 
-    function show($twig, $menu, $chemin, $cat) {
+    function show($twig, $menu, string $chemin, $cat): void {
         $template = $twig->load("key-generator.html.twig");
-        $menu = array(
-            array('href' => $chemin,
-                'text' => 'Acceuil'),
-            array('href' => $chemin."/search",
-                'text' => "Recherche")
-        );
-        echo $template->render(array("breadcrumb" => $menu, "chemin" => $chemin, "categories" => $cat));
+        $menu = [['href' => $chemin, 'text' => 'Acceuil'], ['href' => $chemin."/search", 'text' => "Recherche"]];
+        echo $template->render(["breadcrumb" => $menu, "chemin" => $chemin, "categories" => $cat]);
     }
 
-    function generateKey($twig, $menu, $chemin, $cat, $nom) {
+    function generateKey($twig, $menu, string $chemin, $cat, $nom): void {
         $nospace_nom = str_replace(' ', '', $nom);
 
         if($nospace_nom === '') {
             $template = $twig->load("key-generator-error.html.twig");
-            $menu = array(
-                array('href' => $chemin,
-                    'text' => 'Acceuil'),
-                array('href' => $chemin."/search",
-                    'text' => "Recherche")
-            );
+            $menu = [['href' => $chemin, 'text' => 'Acceuil'], ['href' => $chemin."/search", 'text' => "Recherche"]];
 
-            echo $template->render(array("breadcrumb" => $menu, "chemin" => $chemin, "categories" => $cat));
+            echo $template->render(["breadcrumb" => $menu, "chemin" => $chemin, "categories" => $cat]);
         } else {
             $template = $twig->load("key-generator-result.html.twig");
-            $menu = array(
-                array('href' => $chemin,
-                    'text' => 'Acceuil'),
-                array('href' => $chemin."/search",
-                    'text' => "Recherche")
-            );
+            $menu = [['href' => $chemin, 'text' => 'Acceuil'], ['href' => $chemin."/search", 'text' => "Recherche"]];
 
             // Génere clé unique de 13 caractères
             $key = uniqid();
@@ -45,10 +30,10 @@ class ApiKeyController {
             $apikey = new ApiKey();
 
             $apikey->id_apikey = $key;
-            $apikey->name_key = htmlentities($nom);
+            $apikey->name_key = htmlentities((string) $nom);
             $apikey->save();
 
-            echo $template->render(array("breadcrumb" => $menu, "chemin" => $chemin, "categories" => $cat, "key" => $key));
+            echo $template->render(["breadcrumb" => $menu, "chemin" => $chemin, "categories" => $cat, "key" => $key]);
         }
 
     }
