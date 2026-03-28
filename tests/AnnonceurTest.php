@@ -3,7 +3,7 @@
 namespace tests;
 
 use PHPUnit\Framework\TestCase;
-use model\Annonceur;
+use App\Model\Annonceur;
 
 class AnnonceurTest extends TestCase {
     public function testAnnonceurTableGood() {

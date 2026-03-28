@@ -6,12 +6,12 @@
  * Time: 00:25
  */
 
-namespace controller;
-use model\Annonce;
-use model\Annonceur;
-use model\Photo;
+namespace App\Controller;
+use App\Model\Annonce;
+use App\Model\Annonceur;
+use App\Model\Photo;
 
-class viewAnnonceur {
+class AnnonceurController {
     public function __construct(){
     }
     function afficherAnnonceur($twig, $menu, $chemin, $n, $cat) {

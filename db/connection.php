@@ -1,6 +1,6 @@
 <?php
 
-namespace db;
+namespace App\Db;
 
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Events\Dispatcher;

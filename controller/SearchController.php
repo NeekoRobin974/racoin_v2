@@ -1,11 +1,11 @@
 <?php
 
-namespace controller;
+namespace App\Controller;
 
-use model\Annonce;
-use model\Categorie;
+use App\Model\Annonce;
+use App\Model\Categorie;
 
-class Search {
+class SearchController {
 
     function show($twig, $menu, $chemin, $cat) {
         $template = $twig->load("search.html.twig");

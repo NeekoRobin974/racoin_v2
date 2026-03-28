@@ -3,7 +3,7 @@
 namespace tests;
 
 use PHPUnit\Framework\TestCase;
-use model\Categorie;
+use App\Model\Categorie;
 
 class CategorieTest extends TestCase {
     public function testCategorieTableGood() {

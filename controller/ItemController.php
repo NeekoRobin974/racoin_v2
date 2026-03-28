@@ -1,14 +1,14 @@
 <?php
 
-namespace controller;
+namespace App\Controller;
 use AllowDynamicProperties;
-use model\Annonce;
-use model\Annonceur;
-use model\Departement;
-use model\Photo;
-use model\Categorie;
+use App\Model\Annonce;
+use App\Model\Annonceur;
+use App\Model\Departement;
+use App\Model\Photo;
+use App\Model\Categorie;
 
-#[AllowDynamicProperties] class item {
+#[AllowDynamicProperties] class ItemController {
     public function __construct(){
     }
     function afficherItem($twig, $menu, $chemin, $n, $cat): void

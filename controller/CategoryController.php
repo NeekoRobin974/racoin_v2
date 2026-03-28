@@ -1,13 +1,13 @@
 <?php
 
-namespace controller;
+namespace App\Controller;
 
-use model\Categorie;
-use model\Annonce;
-use model\Photo;
-use model\Annonceur;
+use App\Model\Categorie;
+use App\Model\Annonce;
+use App\Model\Photo;
+use App\Model\Annonceur;
 
-class getCategorie {
+class CategoryController {
 
     protected $categories = array();
 
