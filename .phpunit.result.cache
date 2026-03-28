@@ -1,0 +1,1 @@
+{"version":2,"defects":[],"times":{"tests\\AnnonceTest::testAnnonceHasCorrectTableProperty":0.035,"tests\\AnnonceurTest::testAnnonceurHasCorrectTableProperty":0.003,"tests\\ApiKeyTest::testApiKeyHasCorrectTableProperty":0.003,"tests\\CategorieTest::testCategorieHasCorrectTableProperty":0.003,"tests\\DepartementTest::testDepartementHasCorrectTableProperty":0.004}}
